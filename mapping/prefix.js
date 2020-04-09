@@ -1,3 +1,4 @@
 module.exports = {
-    routePrefix: '/*/',
+    routePrefix: '/mock/security/*/',
+    routeRegex: '/mock\/security\/admin\/profiles\/'
 };

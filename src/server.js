@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const Logger = require('./utils/logger');
 const AdminPanel = require('./admin/admin-panel');
 const RouteManager = require('./routes/route-manager');
+const ProfileMiddleware = require("./middleware/profile-middleware")
 
 // A simple mocking server
 class Server {
@@ -25,7 +26,7 @@ class Server {
         );
 
         app.use(bodyParser.json({ limit: payloadLimit }));
-
+        app.use(ProfileMiddleware)
         //display admin panel
         AdminPanel.setup(app);
         RouteManager.default.build(app);

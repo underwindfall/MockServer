@@ -85,7 +85,6 @@ class ProfileManager {
 
         let profile = this.profileNamed(profileName);
         profile.purgeModifiers();
-
         Object.keys(data).forEach((key) => {
             this._updateModifier(profile, key, data[key]);
         });
@@ -103,8 +102,7 @@ class ProfileManager {
     /// - parameter key: The modifier key.
     /// - parameter value: The modifier's new value.
     _updateModifier(profile, key, value) {
-        let modifier = value[0];
-
+        let modifier = value;
         if (modifier == undefined || modifier == '') {
             delete profile.modifiers[key];
         } else {

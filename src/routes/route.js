@@ -11,13 +11,13 @@ class Route {
     /// - parameter name: The endpoint's URL that will be registered in express.
     /// - parameter path: The endpoint folder's name that contain JSON files.
     /// - parameter request: All possible requests types (get, post, ...) for the endpoint (optional).
-    /// - seealso: `configuration/routes.js`
+    /// - seealso: `mapping/routes.js`
     constructor(name, path, requests) {
         this.name = name;
         this.path = path;
         this.requests = requests || {};
         this.modifiers = this.getModifiers();
-        this.getModifiers = this.getModifiers.bind(this);
+        // this.getModifiers = this.getModifiers.bind(this);
         for (let request in this.requests) {
             this.type = request.toUpperCase();
             this.label = this.type + ' ' + this.name;
@@ -31,10 +31,10 @@ class Route {
             let realPath = path.join(__dirname, '..', this.path);
             fs.readdirSync(realPath).forEach((file) => {
                 //Remove extension
-                let fileName = file.replace(path.extname(file), '');
+                const fileName = file.replace(path.extname(file), '');
 
                 //Split with responseFile + "_"
-                let fileNameSplitted = fileName.split(responseFile + '_');
+                const fileNameSplitted = fileName.split(responseFile + '_');
                 if (fileNameSplitted.length > 1 && fileNameSplitted[0] === '') {
                     modifiers.push(fileNameSplitted[1]);
                 }
@@ -54,7 +54,6 @@ class Route {
         } else {
             responseFile += '.json';
         }
-
         const jsonFilePath = path.join(this.path, responseFile);
         const response = new JSONResponse(jsonFilePath);
 
@@ -62,7 +61,7 @@ class Route {
         // juste send the response as String, and print an error message.
         let finalResponse = response.data;
         try {
-            finalResponse = this.adapter(JSON.parse(response.data));
+            finalResponse = JSON.parse(response.data);
         } catch (err) {
             Logger.error(`Invalid JSON reponse from file ${jsonFilePath}.`);
         }
@@ -77,15 +76,13 @@ class Route {
     build(app) {
         for (let request in this.requests) {
             const routePrefix = Configuration.load('prefix').routePrefix;
-            console.log('routePrefix', Configuration.load('prefix').routePrefix);
             let routeUrl = path.join(routePrefix, this.name);
             let handler = function (req, res) {
                 let responseFile = this.requests[request];
                 this.manageJson(req, res, responseFile);
             };
-
             app[request](routeUrl, handler.bind(this));
-            Logger.info('route: ' + request.toUpperCase() + ' ' + routeUrl);
+            Logger.info(`route: ${request.toUpperCase()} ${routeUrl}`)
         }
     }
 }

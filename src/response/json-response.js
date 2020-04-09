@@ -6,7 +6,7 @@ class JSONResponse {
     ///
     /// - parameter fileName: Name of the JSON file to laod.
     constructor(fileName) {
-        const filePath = path.join(__dirname, '../mocks', fileName);
+        const filePath = path.join(__dirname, '../../mocks', fileName);
         const json = fs.readFileSync(filePath, 'utf8');
         this.data = json;
     }
