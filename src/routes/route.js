@@ -1,8 +1,8 @@
-const JSONResponse = require('../response');
-const Logger = require('../logger');
-const Configuration = require('../configuration');
 const path = require('path');
 const fs = require('fs');
+const JSONResponse = require('../response/json-response');
+const Logger = require('../utils/logger');
+const Configuration = require('../configuration');
 
 /// Represent an endpoint.
 class Route {
@@ -42,21 +42,21 @@ class Route {
         }
 
         if (modifiers.length > 0) {
-            Logger.info('modifiers = ' + modifiers);
+            Logger.info(`modifiers = ${modifiers}`);
         }
         return modifiers;
     }
 
     manageJson(req, res, responseFile) {
-        let profile = req.profile;
+        const profile = req.profile;
         if (profile.modifiers != undefined && profile.modifiers[this.label] != undefined) {
             responseFile += '_' + profile.modifiers[this.label] + '.json';
         } else {
             responseFile += '.json';
         }
 
-        let jsonFilePath = path.join(this.path, responseFile);
-        let response = new JSONResponse(jsonFilePath);
+        const jsonFilePath = path.join(this.path, responseFile);
+        const response = new JSONResponse(jsonFilePath);
 
         // response.data is a String type. If the native parser fail to convert it into a real object,
         // juste send the response as String, and print an error message.
@@ -64,11 +64,11 @@ class Route {
         try {
             finalResponse = this.adapter(JSON.parse(response.data));
         } catch (err) {
-            Logger.error('Invalid JSON reponse from file `' + jsonFilePath + '`.');
+            Logger.error(`Invalid JSON reponse from file ${jsonFilePath}.`);
         }
         res.setHeader('Content-Type', 'application/json');
 
-        this.manageTimeOut(res, profile, finalResponse);
+        res.send(finalResponse);
     }
 
     /// Register the endpoint to the application.
@@ -76,7 +76,8 @@ class Route {
     /// - parameter app: The express application.
     build(app) {
         for (let request in this.requests) {
-            let routePrefix = Configuration.load('server').routePrefix;
+            const routePrefix = Configuration.load('prefix').routePrefix;
+            console.log('routePrefix', Configuration.load('prefix').routePrefix);
             let routeUrl = path.join(routePrefix, this.name);
             let handler = function (req, res) {
                 let responseFile = this.requests[request];
