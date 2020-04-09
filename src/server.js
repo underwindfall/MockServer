@@ -1,6 +1,8 @@
-const Configuration = require('./configuration');
 const express = require('express');
 const bodyParser = require('body-parser');
+const Logger = require('./utils/logger');
+const AdminPanel = require('./admin/admin-panel');
+const RouteManager = require('./routes/route-manager');
 
 // A simple mocking server
 class Server {
@@ -24,13 +26,11 @@ class Server {
 
         app.use(bodyParser.json({ limit: payloadLimit }));
 
-        //TODO to replace by somehting like general admin panel
-        app.set('views', './views');
-        app.set('view engine', 'ejs');
+        //display admin panel
+        AdminPanel.setup(app);
+        RouteManager.default.build(app);
 
-        app.listen(this.port, () =>
-            console.log(`Mock server is listening to  http://localhost:${this.port}`),
-        );
+        app.listen(this.port, () => Logger.info(`Mock server is listening to port ${this.port}`));
     }
 }
 
