@@ -10,7 +10,7 @@
 <body class="container-fluid">
     <h2 class="center-text"><em><%= profile.name %></em></h2>
     <p style="display: <%= (updated == true) ? 'block' : 'none' %>"
-        class="col-md-6 col-md-offset-3 message-box bg-<%= (success == true) ? 'success' : 'danger' %>">
+        class="col-md-6 offset-md-3 message-box bg-<%= (success == true) ? 'success' : 'danger' %>">
         <% if (updated == true) { %>
         <% if (success == true) { %>
         <%= 'Updated' %>
@@ -20,62 +20,9 @@
         <% } %>
     </p>
     <form method="post">
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <h3 style="margin-bottom: 1em;">Parameters</h3>
-
-                <div style="margin-bottom: 1em;">
-                    <%- include('profileValues/stringRow', {key: "timeout", value: profile.timeout})%> (s)
-                </div>
-                <div style="margin-bottom: 1em;">
-                    <%- include('profileValues/stringRow', {key: "responseCode", value: profile.responseCode})%>
-                </div>
-
-                <div class="action-block">
-                    <button type="button" onClick="javascript:window.location.href='/admin/profiles'"
-                        class="btn btn-default">Back</button>
-                    <input type="submit" value="Update" class="btn btn-primary pull-right">
-                </div>
-            </div>
-
-        </div>
 
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <h3 style="margin-bottom: 1em;">Tokens</h3>
-
-                <table class="table">
-                    <tr>
-                        <th>Key</th>
-                        <th>Value</th>
-                    </tr>
-
-                    <%
-                    Object.keys(profile.data).forEach(key => {
-                        var value = profile.data[key]
-                        
-                        switch (typeof value) {
-                        case "string":
-                            %><%- include('profileValues/stringRow', {key: key, value: value}) %><%
-                            break
-                            
-                        default:
-                            %><%- include('profileValues/stringRow', {key: key, value: value}) %><%
-                            break
-                        }
-                    }) %>
-                </table>
-
-                <div class="action-block">
-                    <button type="button" onClick="javascript:window.location.href='/admin/profiles'"
-                        class="btn btn-default">Back</button>
-                    <input type="submit" value="Update" class="btn btn-primary pull-right">
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-6 offset-md-3">
                 <h3 style="margin-bottom: 1em;">Modifiers</h3>
                 <table id="modifiers-table" class="table">
                     <tr>
@@ -99,7 +46,7 @@
                 </table>
 
                 <div class="action-block">
-                    <button type="button" onClick="javascript:window.location.href='/admin/profiles'"
+                    <button type="button" onClick="javascript:window.location.href='<%= pathPrefix %>/admin/profiles/'"
                         class="btn btn-default">Back</button>
                     <input type="submit" value="Update" class="btn btn-primary pull-right">
                 </div>
