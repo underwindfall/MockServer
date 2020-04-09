@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const AdminRoute = require('./admin-routes');
 
 /// The administration panel module.
 class AdminPanel {
@@ -12,8 +13,7 @@ class AdminPanel {
         app.set('views', path.join(__dirname, 'views'));
         app.disable('view cache');
         app.use('/js', express.static(path.join(__dirname, '/views/js')));
-
-       
+        AdminRoute.build(app);
     }
 }
 
