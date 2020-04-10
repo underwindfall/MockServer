@@ -7,4 +7,10 @@ module.exports = {
             get: 'hello',
         },
     },
+    logout: {
+        folder: 'logout',
+        requests: {
+            post: 'logout',
+        },
+    },
 };
